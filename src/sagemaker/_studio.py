@@ -1,4 +1,4 @@
-# Copyright 2017-2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -46,6 +46,7 @@ def _append_project_tags(tags=None, working_dir=None):
         return tags
 
     all_tags = tags or []
+    additional_tags = [tag for tag in additional_tags if tag not in all_tags]
     all_tags.extend(additional_tags)
 
     return all_tags

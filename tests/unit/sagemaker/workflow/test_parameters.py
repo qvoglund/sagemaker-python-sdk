@@ -1,4 +1,4 @@
-# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -35,6 +35,11 @@ def test_parameter():
 def test_parameter_with_default():
     param = ParameterFloat(name="MyFloat", default_value=1.2)
     assert param.to_request() == {"Name": "MyFloat", "Type": "Float", "DefaultValue": 1.2}
+
+
+def test_parameter_with_default_value_zero():
+    param = ParameterInteger(name="MyInteger", default_value=0)
+    assert param.to_request() == {"Name": "MyInteger", "Type": "Integer", "DefaultValue": 0}
 
 
 def test_parameter_string_with_enum_values():

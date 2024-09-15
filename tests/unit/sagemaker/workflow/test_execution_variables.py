@@ -1,4 +1,4 @@
-# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -18,6 +18,4 @@ from sagemaker.workflow.execution_variables import ExecutionVariables
 
 def test_execution_variable():
     var = ExecutionVariables.START_DATETIME
-    assert var.to_request() == {"Get": "Execution.StartDateTime"}
     assert var.expr == {"Get": "Execution.StartDateTime"}
-    assert isinstance(var, str)

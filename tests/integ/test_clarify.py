@@ -1,4 +1,4 @@
-# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -144,6 +144,7 @@ def model_config(model_name):
         instance_type="ml.c5.xlarge",
         instance_count=1,
         accept_type="application/jsonlines",
+        endpoint_name_prefix="myprefix",
     )
 
 
@@ -172,6 +173,7 @@ def shap_config():
         ],
         num_samples=2,
         agg_method="mean_sq",
+        seed=123,
     )
 
 

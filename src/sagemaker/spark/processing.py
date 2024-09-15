@@ -1,4 +1,4 @@
-# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -148,7 +148,12 @@ class _SparkProcessorBase(ScriptProcessor):
         region = session.boto_region_name
 
         self.image_uri = self._retrieve_image_uri(
-            image_uri, framework_version, py_version, container_version, region, instance_type
+            image_uri,
+            framework_version,
+            py_version,
+            container_version,
+            region,
+            instance_type,
         )
 
         env = env or {}
@@ -213,6 +218,7 @@ class _SparkProcessorBase(ScriptProcessor):
         wait=True,
         logs=True,
         job_name=None,
+        prefix=None,
         experiment_config=None,
         kms_key=None,
     ):
@@ -233,6 +239,8 @@ class _SparkProcessorBase(ScriptProcessor):
                 Only meaningful when wait is True (default: True).
             job_name (str): Processing job name. If not specified, the processor generates
                 a default job name, based on the base job name and current timestamp.
+            prefix (str): Bucket prefix the processing job will upload the local app and
+                inputs to before downloading to container.
             experiment_config (dict[str, str]): Experiment management configuration.
                 Dictionary contains three optional keys:
                 'ExperimentName', 'TrialName', and 'TrialComponentDisplayName'.
@@ -249,6 +257,7 @@ class _SparkProcessorBase(ScriptProcessor):
             wait,
             logs,
             job_name,
+            prefix,
             experiment_config,
             kms_key,
         )
@@ -311,7 +320,13 @@ class _SparkProcessorBase(ScriptProcessor):
             self.history_server = None
 
     def _retrieve_image_uri(
-        self, image_uri, framework_version, py_version, container_version, region, instance_type
+        self,
+        image_uri,
+        framework_version,
+        py_version,
+        container_version,
+        region,
+        instance_type,
     ):
         """Builds an image URI."""
         if not image_uri:
@@ -444,7 +459,9 @@ class _SparkProcessorBase(ScriptProcessor):
                             f"{self._submit_deps_error_message}"
                         )
                     logger.info(
-                        "Copying dependency from local path %s to tmpdir %s", dep_path, tmpdir
+                        "Copying dependency from local path %s to tmpdir %s",
+                        dep_path,
+                        tmpdir,
                     )
                     shutil.copy(dep_path, tmpdir)
                 else:
@@ -456,7 +473,9 @@ class _SparkProcessorBase(ScriptProcessor):
             # If any local files were found and copied, upload the temp directory to S3
             if os.listdir(tmpdir):
                 logger.info(
-                    "Uploading dependencies from tmpdir %s to S3 %s", tmpdir, input_channel_s3_uri
+                    "Uploading dependencies from tmpdir %s to S3 %s",
+                    tmpdir,
+                    input_channel_s3_uri,
                 )
                 S3Uploader.upload(
                     local_path=tmpdir,
@@ -555,7 +574,8 @@ class _SparkProcessorBase(ScriptProcessor):
                     )
                 else:
                     logger.info(
-                        "History server is up on http://0.0.0.0%s", self._history_server_url_suffix
+                        "History server is up on http://0.0.0.0%s",
+                        self._history_server_url_suffix,
                     )
                 break
             if time.time() > timeout:
@@ -733,9 +753,9 @@ class PySparkProcessor(_SparkProcessorBase):
     ):
         """Returns a RunArgs object.
 
-        This object contains the normalized inputs, outputs
-            and arguments needed when using a ``PySparkProcessor``
-            in a :class:`~sagemaker.workflow.steps.ProcessingStep`.
+        This object contains the normalized inputs, outputs and arguments
+        needed when using a ``PySparkProcessor`` in a
+        :class:`~sagemaker.workflow.steps.ProcessingStep`.
 
         Args:
             submit_app (str): Path (local or S3) to Python file to submit to Spark
@@ -982,9 +1002,9 @@ class SparkJarProcessor(_SparkProcessorBase):
     ):
         """Returns a RunArgs object.
 
-        This object contains the normalized inputs, outputs
-            and arguments needed when using a ``SparkJarProcessor``
-            in a :class:`~sagemaker.workflow.steps.ProcessingStep`.
+        This object contains the normalized inputs, outputs and arguments
+        needed when using a ``SparkJarProcessor`` in a
+        :class:`~sagemaker.workflow.steps.ProcessingStep`.
 
         Args:
             submit_app (str): Path (local or S3) to Python file to submit to Spark
@@ -1154,7 +1174,9 @@ class _HistoryServer:
         self.down()
         logger.info("Starting history server...")
         subprocess.Popen(
-            self.run_history_server_command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            self.run_history_server_command.split(),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
 
     def down(self):

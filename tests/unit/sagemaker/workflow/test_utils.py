@@ -1,4 +1,4 @@
-# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -24,6 +24,7 @@ from mock import (
     Mock,
     PropertyMock,
 )
+
 from sagemaker.estimator import Estimator
 from sagemaker.workflow._utils import _RepackModelStep
 from tests.unit import DATA_DIR
@@ -105,7 +106,8 @@ def test_repack_model_step(estimator):
     entry_point = f"{DATA_DIR}/dummy_script.py"
     step = _RepackModelStep(
         name="MyRepackModelStep",
-        estimator=estimator,
+        sagemaker_session=estimator.sagemaker_session,
+        role=estimator.role,
         model_data=model_data,
         entry_point=entry_point,
         depends_on=["TestStep"],
@@ -158,7 +160,8 @@ def test_repack_model_step_with_source_dir(estimator, source_dir):
     entry_point = "inference.py"
     step = _RepackModelStep(
         name="MyRepackModelStep",
-        estimator=estimator,
+        sagemaker_session=estimator.sagemaker_session,
+        role=estimator.role,
         model_data=model_data,
         entry_point=entry_point,
         source_dir=source_dir,

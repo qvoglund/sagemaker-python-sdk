@@ -1,4 +1,4 @@
-# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"). You
 # may not use this file except in compliance with the License. A copy of
@@ -91,6 +91,14 @@ def test_append_project_tags(tmpdir):
     tags = _append_project_tags([{"Key": "a", "Value": "b"}], working_dir)
     assert tags == [
         {"Key": "a", "Value": "b"},
+        {"Key": "sagemaker:project-id", "Value": "proj-1234"},
+        {"Key": "sagemaker:project-name", "Value": "proj-name"},
+    ]
+
+    tags = _append_project_tags(
+        [{"Key": "sagemaker:project-id", "Value": "proj-1234"}], working_dir
+    )
+    assert tags == [
         {"Key": "sagemaker:project-id", "Value": "proj-1234"},
         {"Key": "sagemaker:project-name", "Value": "proj-name"},
     ]
